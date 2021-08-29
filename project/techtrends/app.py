@@ -1,13 +1,48 @@
+from os import system
+import re
 import sqlite3
+from typing import Any
+import logging
+import sys
 
 from flask import Flask, jsonify, json, render_template, request, url_for, redirect, flash
+from flask.helpers import make_response
+from flask.templating import render_template_string
+from flask.wrappers import Request, Response
+from flask.logging import default_handler
 from werkzeug.exceptions import abort
+from werkzeug.wrappers import response
 
+
+# The number of database connection count
+db_connection_count = 0
+
+
+# Create custom logger object to create logs
+logger = logging.getLogger('techtrends_logs')
+
+log_format = logging.Formatter('%(asctime)s  - %(levelname)s - %(message)s')
+
+logger.setLevel(logging.DEBUG)
+print(logging.getLevelName(logger.level))
+if logging.getLevelName(logger.level) == 'INFO' or 'DEBUG':
+    stdout_handler = logging.StreamHandler(sys.stdout)
+    stdout_handler.setFormatter(log_format)
+    stdout_handler.setLevel(logging.getLevelName(logger.level))
+    logger.addHandler(stdout_handler)
+else:
+    stderr_handler = logging.StreamHandler(sys.stderr)
+    stderr_handler.setFormatter(log_format)
+    stderr_handler.setLevel(logging.getLevelName(logger.level))
+    logger.addHandler(stderr_handler)
+    
 # Function to get a database connection.
 # This function connects to database with the name `database.db`
 def get_db_connection():
     connection = sqlite3.connect('database.db')
     connection.row_factory = sqlite3.Row
+    global db_connection_count 
+    db_connection_count +=1
     return connection
 
 # Function to get a post using its ID
@@ -21,6 +56,7 @@ def get_post(post_id):
 # Define the Flask application
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your secret key'
+
 
 # Define the main route of the web application 
 @app.route('/')
@@ -36,13 +72,16 @@ def index():
 def post(post_id):
     post = get_post(post_id)
     if post is None:
-      return render_template('404.html'), 404
+        logger.error('No post is found.')
+        return render_template('404.html'), 404
     else:
-      return render_template('post.html', post=post)
+        logger.info(post['title']+' is accessed.')
+        return render_template('post.html', post=post)
 
 # Define the About Us page
 @app.route('/about')
 def about():
+    logger.info('About us page is accessed.')
     return render_template('about.html')
 
 # Define the post creation functionality 
@@ -61,9 +100,28 @@ def create():
             connection.commit()
             connection.close()
 
+            logger.info('New article \"'+title+'\" is created.')
             return redirect(url_for('index'))
 
     return render_template('create.html')
+
+# Define the health status of application
+@app.route('/healthz')
+def healthz():    
+    return make_response(jsonify({'message':'Ok - healthy'})),200
+   
+
+# Define the metrics endpoint of application and return the updated amount of posts and number of connections made
+# with the database
+@app.route('/metrics')
+def get_metrics():
+    connection = get_db_connection()
+    posts = connection.execute('SELECT * FROM posts').fetchall()
+    connection.close()
+    return make_response(jsonify({'Post Count':len(posts),'Numbers of database connection':db_connection_count})),200
+
+
+
 
 # start the application on port 3111
 if __name__ == "__main__":

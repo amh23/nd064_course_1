@@ -1,11 +1,56 @@
 ## Docker commands used to build the application 
-# TODO: insert the docker build command
+docker build -t techtrends . 
 
 ## Docker commands used to run the application
-# TODO: insert the docker run command
+docker run -d -p 3111:3111 techtrends
 
 ## Docker commands used to get the application logs
-# TODO: insert the docker logs command
+docker logs container_id
 
 ## Logs from the container running the TechTrends application
-# TODO: paste logs from the Docker container 
+ * Serving Flask app "app" (lazy loading)
+ * Environment: production
+   WARNING: This is a development server. Do not use it in a production deployment.
+   Use a production WSGI server instead.
+ * Debug mode: off
+ * Running on http://0.0.0.0:3111/ (Press CTRL+C to quit)
+172.17.0.1 - - [29/Aug/2021 15:19:36] "GET / HTTP/1.1" 200 -
+172.17.0.1 - - [29/Aug/2021 15:19:36] "GET /static/css/main.css HTTP/1.1" 200 -
+172.17.0.1 - - [29/Aug/2021 15:19:36] "GET /favicon.ico HTTP/1.1" 404 -
+2021-08-29 15:19:41,865  - INFO - 2020 CNCF Annual Report is accessed.
+172.17.0.1 - - [29/Aug/2021 15:19:41] "GET /1 HTTP/1.1" 200 -
+2021-08-29 15:19:44,744  - INFO - About us page is accessed.
+172.17.0.1 - - [29/Aug/2021 15:19:44] "GET /about HTTP/1.1" 200 -
+2021-08-29 15:19:49,555  - ERROR - No post is found.
+172.17.0.1 - - [29/Aug/2021 15:19:49] "GET /898 HTTP/1.1" 404 -
+172.17.0.1 - - [29/Aug/2021 15:19:51] "GET /create HTTP/1.1" 200 -
+2021-08-29 15:20:17,468  - INFO - New article "SUSE CLOUD NATIVE " is created.
+172.17.0.1 - - [29/Aug/2021 15:20:17] "POST /create HTTP/1.1" 302 -
+172.17.0.1 - - [29/Aug/2021 15:20:17] "GET / HTTP/1.1" 200 -
+## Docker commands used to pull the remote image  
+docker pull amh23/techtrends:techtrends
+
+## Docker commands used to expose port 7111 and execute locally
+docker run -d -p 7111:3111 amh23/techtrends:techtrends
+
+## Logs from the pulled image running locally
+ * Serving Flask app "app" (lazy loading)
+ * Environment: production
+   WARNING: This is a development server. Do not use it in a production deployment.
+   Use a production WSGI server instead.
+ * Debug mode: off
+ * Running on http://0.0.0.0:3111/ (Press CTRL+C to quit)
+172.17.0.1 - - [29/Aug/2021 15:22:08] "GET / HTTP/1.1" 200 -
+172.17.0.1 - - [29/Aug/2021 15:22:08] "GET /static/css/main.css HTTP/1.1" 200 -
+172.17.0.1 - - [29/Aug/2021 15:22:08] "GET /favicon.ico HTTP/1.1" 404 -
+2021-08-29 15:24:35,553  - INFO - Kubernetes Certification is accessed.
+172.17.0.1 - - [29/Aug/2021 15:24:35] "GET /6 HTTP/1.1" 200 -
+2021-08-29 15:24:37,646  - INFO - About us page is accessed.
+172.17.0.1 - - [29/Aug/2021 15:24:37] "GET /about HTTP/1.1" 200 -
+2021-08-29 15:24:44,923  - ERROR - No post is found.
+2021-08-29 15:24:44,923  - ERROR - No post is found.
+172.17.0.1 - - [29/Aug/2021 15:24:44] "GET /777 HTTP/1.1" 404 -
+172.17.0.1 - - [29/Aug/2021 15:24:46] "GET /create HTTP/1.1" 200 -
+2021-08-29 15:25:08,374  - INFO - New article "Docker for Application Packaging" is created.
+172.17.0.1 - - [29/Aug/2021 15:25:08] "POST /create HTTP/1.1" 302 -
+172.17.0.1 - - [29/Aug/2021 15:25:08] "GET / HTTP/1.1" 200 -
