@@ -13,5 +13,5 @@ spec:
       valueFiles:
       - values-prod.yaml
     path: project/helm/
-    repoURL: https://github.com/amh23/nd064_course_1/project/techtrends
+    repoURL: https://github.com/amh23/nd064_course_1/tree/main/project/techtrends
     targetRevision: HEAD

@@ -13,5 +13,5 @@ spec:
       valueFiles:
       - values-staging.yaml
     path: solutions/helm/techtrends-deployment
-    repoURL: https://github.com/amh23/nd064_course_1/project/argocd
+    repoURL: https://github.com/amh23/nd064_course_1/tree/main/project/argocd
     targetRevision: HEAD
