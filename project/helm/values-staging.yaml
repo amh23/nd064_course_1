@@ -1,5 +1,6 @@
 namespace: 
   name: staging
+  
 service:
   port: 5111
   type: ClusterIP

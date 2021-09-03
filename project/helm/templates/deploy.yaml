@@ -1,12 +1,13 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  creationTimestamp: null
   labels:
     app: techtrends
   name: techtrends
-  namespace: {{ .Values.namespace.name }} 
+  namespace: sandbox
 spec:
-  replicas: {{ .Values.replicaCount }} 
+  replicas: 1
   selector:
     matchLabels:
       app: techtrends
@@ -17,12 +18,30 @@ spec:
     type: RollingUpdate
   template:
     metadata:
+      creationTimestamp: null
       labels:
         app: techtrends
     spec:
       containers:
-      - image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
+      - image: amh23/techtrends
+        imagePullPolicy: IfNotPresent
         name: techtrends
+        ports:
+        - containerPort: 3111
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 3111
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 3111
         resources:
-{{ toYaml .Values.resources | indent 12 }}
+          requests:
+            cpu: "250m"
+            memory: "64Mi"
+          limits:
+            cpu: "500m"
+            memory: "128Mi"
+
+status: {}
