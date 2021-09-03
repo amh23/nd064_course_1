@@ -6,7 +6,7 @@ service:
 
 image:
   repository: amh23/techtrends
-  tage: latest
+  tag: latest
   pullPolicy: Always
 
 replicaCount: 5
