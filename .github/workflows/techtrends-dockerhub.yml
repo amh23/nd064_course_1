@@ -4,8 +4,6 @@ name: TechTrends - Package with Docker
 on:
   push:
     branches: [ main ]
-    tags: |
-      type=semver,pattern={{raw}}
   pull_request:
     branches: [ main ]
 
@@ -28,9 +26,11 @@ jobs:
       -
         name: Extract metada (tags) for Docker
         id: meta
-        uses: docker/setup-buildx-action@v1
+        uses: docker/metadata-action@v1
         with:
-          images: amh23/techtrends
+          images: nd064_course_1/project/techtrends
+          tags: |
+            type=semver,pattern={{raw}}
       -
         name: Login to DockerHub
         uses: docker/login-action@v1 
