@@ -38,6 +38,6 @@ jobs:
           context: ./project/techtrends/
           file: ./project/techtrends/Dockerfile
           platforms: linux/amd64
-          push: true
+          push:  true
           tags: ${{ steps.meta.outputs.tags }}
            
