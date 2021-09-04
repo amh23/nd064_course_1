@@ -4,6 +4,8 @@ name: TechTrends - Package with Docker
 on:
   push:
     branches: [ main ]
+    tags: |
+      type=semver,pattern={{raw}}
   pull_request:
     branches: [ main ]
 
@@ -37,4 +39,5 @@ jobs:
           file: ./project/techtrends/Dockerfile
           platforms: linux/amd64
           push: true
-          tags: amh23/techtrends:latest
+          tags: ${{ steps.meta.outputs.tags }}
+           
