@@ -28,7 +28,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v1
         with:
-          images: nd064_course_1/project/techtrends
+          images: amh23/techtrends
           tags: |
             type=semver,pattern={{raw}}
       -
