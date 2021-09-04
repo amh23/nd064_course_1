@@ -1,6 +1,6 @@
-from os import system
-import re
+import os
 import sqlite3
+from sqlite3.dbapi2 import connect
 from typing import Any
 import logging
 import sys
@@ -39,11 +39,14 @@ else:
 # Function to get a database connection.
 # This function connects to database with the name `database.db`
 def get_db_connection():
-    connection = sqlite3.connect('database.db')
-    connection.row_factory = sqlite3.Row
-    global db_connection_count 
-    db_connection_count +=1
-    return connection
+    try:
+        connection = sqlite3.connect('database.db')
+        connection.row_factory = sqlite3.Row
+        global db_connection_count 
+        db_connection_count +=1
+        return connection
+    except:
+        return make_response(jsonify({'message':'ERROR - Unhealthy'})),500
 
 # Function to get a post using its ID
 def get_post(post_id):
@@ -61,11 +64,14 @@ app.config['SECRET_KEY'] = 'your secret key'
 # Define the main route of the web application 
 @app.route('/')
 def index():
-    connection = get_db_connection()
-    posts = connection.execute('SELECT * FROM posts').fetchall()
-    connection.close()
-    return render_template('index.html', posts=posts)
-
+    try:
+        connection = get_db_connection()
+        posts = connection.execute('SELECT * FROM posts').fetchall()
+        connection.close()
+        return render_template('index.html', posts=posts)
+    except:
+        return make_response(jsonify({'message':'ERROR - Unhealty'})),500
+   
 # Define how each individual article is rendered 
 # If the post ID is not found a 404 page is shown
 @app.route('/<int:post_id>')
@@ -105,11 +111,15 @@ def create():
 
     return render_template('create.html')
 
+ 
 # Define the health status of application
 @app.route('/healthz')
 def healthz():    
-    return make_response(jsonify({'message':'Ok - healthy'})),200
-   
+    connection = get_db_connection()
+    name = connection.execute('SELECT name FROM sqlite_master WHERE type="table" AND name="posts" ').fetchone()
+    if name == '' or name is None:
+        return make_response(jsonify({'message':'ERROR - Unhealthy'})),500
+    return make_response(jsonify({'message':'Ok - Healthy'})),200
 
 # Define the metrics endpoint of application and return the updated amount of posts and number of connections made
 # with the database
