@@ -112,7 +112,7 @@ def create():
     return render_template('create.html')
 
  
-# Define the health status of application
+# Define the health status of application checking posts table existing in the database or not
 @app.route('/healthz')
 def healthz():    
     connection = get_db_connection()
