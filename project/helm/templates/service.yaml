@@ -9,7 +9,7 @@ spec:
   ports:
   - port: {{ .Values.service.port }} 
     protocol: TCP
-      targetPort: {{ .Values.service.targetPort }}
+    targetPort: {{ .Values.service.targetPort | default .Values.service.port }}
   selector:
     app: techtrends
   type: {{ .Values.service.type }} 
